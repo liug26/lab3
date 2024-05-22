@@ -3,7 +3,7 @@ TODO introduction
 
 ## Building
 ```shell
-TODO
+To build, run command `make`
 ```
 
 ## Running
