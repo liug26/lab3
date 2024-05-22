@@ -1,5 +1,7 @@
+# UID 305932226
+
 # Hash Hash Hash
-TODO introduction
+Hash Hash Hash is a project about implementing mutex locks for concurrency, analyzing the performance of two different locking strategies, and comparing them to the base hash table implementation.
 
 ## Building
 ```shell

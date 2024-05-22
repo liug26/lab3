@@ -103,7 +103,6 @@ void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
     int unlock_result = pthread_mutex_unlock(&hash_table_entry->lock);
 	if (unlock_result != 0)
 		exit(unlock_result);
-	return;
 
 	list_entry = calloc(1, sizeof(struct list_entry));
 	list_entry->key = key;
