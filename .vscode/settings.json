@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "pthread.h": "c",
+        "queue.h": "c",
+        "ios": "c",
+        "random": "c",
+        "*.tcc": "c",
+        "memory_resource": "c"
+    }
+}
