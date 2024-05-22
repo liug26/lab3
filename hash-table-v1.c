@@ -100,6 +100,10 @@ void hash_table_v1_add_entry(struct hash_table_v1 *hash_table,
 	list_entry->key = key;
 	list_entry->value = value;
 	SLIST_INSERT_HEAD(list_head, list_entry, pointers);
+
+    int unlock_result = pthread_mutex_unlock(&lock);
+	if (unlock_result != 0)
+		exit(unlock_result);
 }
 
 uint32_t hash_table_v1_get_value(struct hash_table_v1 *hash_table,
