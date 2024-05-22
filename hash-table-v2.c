@@ -18,6 +18,7 @@ SLIST_HEAD(list_head, list_entry);
 struct hash_table_entry {
 	struct list_head list_head;
     pthread_mutex_t lock;
+    pthread_mutex_t lock2;
 };
 
 struct hash_table_v2 {
@@ -33,6 +34,9 @@ struct hash_table_v2 *hash_table_v2_create()
 		SLIST_INIT(&entry->list_head);
 
         int init_result = pthread_mutex_init(&entry->lock, NULL);
+		if (init_result != 0)
+			exit(init_result);
+        init_result = pthread_mutex_init(&entry->lock2, NULL);
 		if (init_result != 0)
 			exit(init_result);
 	}
@@ -80,8 +84,7 @@ void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
 	struct hash_table_entry *hash_table_entry = get_hash_table_entry(hash_table, key);
 
     int lock_result = pthread_mutex_lock(&hash_table_entry->lock);
-	
-	if(lock_result != 0)
+	if (lock_result != 0)
 		exit(lock_result);
 
 	struct list_head *list_head = &hash_table_entry->list_head;
@@ -97,12 +100,22 @@ void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
 		return;
 	}
 
+    int unlock_result = pthread_mutex_unlock(&hash_table_entry->lock);
+	if (unlock_result != 0)
+		exit(unlock_result);
+	return;
+
 	list_entry = calloc(1, sizeof(struct list_entry));
 	list_entry->key = key;
 	list_entry->value = value;
+
+    lock_result = pthread_mutex_lock(&hash_table_entry->lock2);
+	if (lock_result != 0)
+		exit(lock_result);
+
 	SLIST_INSERT_HEAD(list_head, list_entry, pointers);
 
-    int unlock_result = pthread_mutex_unlock(&hash_table_entry->lock);
+    unlock_result = pthread_mutex_unlock(&hash_table_entry->lock2);
 	if (unlock_result != 0)
 		exit(unlock_result);
 }
@@ -130,6 +143,9 @@ void hash_table_v2_destroy(struct hash_table_v2 *hash_table)
 		}
 
         int destroy_result = pthread_mutex_destroy(&entry->lock);
+		if (destroy_result != 0)
+			exit(destroy_result);
+        destroy_result = pthread_mutex_destroy(&entry->lock2);
 		if (destroy_result != 0)
 			exit(destroy_result);
 	}
